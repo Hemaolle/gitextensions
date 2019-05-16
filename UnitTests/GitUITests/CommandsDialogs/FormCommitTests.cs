@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommonTestUtils;
 using FluentAssertions;
+using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using ICSharpCode.TextEditor;
@@ -222,6 +225,28 @@ namespace GitUITests.CommandsDialogs.CommitDialog
             TestAddSelectionToCommitMessage(focusSelectedDiff: true, CommitMessageTestData.SelectedText,
                 message, selectionStart, selectionLength,
                 expectedResult: true, expectedMessage, expectedSelectionStart);
+        }
+
+        [Test]
+        public void Stage_large_amount_of_files()
+        {
+            List<GitItemStatus> statuses = new List<GitItemStatus>();
+            for (int i = 0; i < 500; i++)
+            {
+                string fileName = i + ".txt";
+                _referenceRepository.ModuleTestHelper.CreateRepoFile(fileName, "a\na");
+                statuses.Add(new GitItemStatus { Name = fileName });
+            }
+
+            _referenceRepository.Module.StageFiles(statuses, out bool wereErrors);
+
+            // var files = new List<GitItemStatus>();
+            //
+            //
+            // RunFormTest(form =>
+            // {
+            //     form.GetTestAccessor().ExecuteCommand(FormCommit.Command.StageAll);
+            // });
         }
 
         private void TestAddSelectionToCommitMessage(

@@ -30,6 +30,7 @@ namespace GitUITests.CommandsDialogs
         }
 
         public GitModule Module => _moduleTestHelper.Module;
+        public GitModuleTestHelper ModuleTestHelper => _moduleTestHelper;
 
         public string CommitHash => _commitHash;
 
